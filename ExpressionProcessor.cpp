@@ -77,10 +77,90 @@ private:
 public:
 
     int process(string expression) {
-        infix = expression;
-        if (!validateParentheses()) return 3;
-        return 0;
+
+    infix = expression;
+
+    if (!validateParentheses()) return 3;
+
+    if (!infixToPostfix()) return 1;
+
+    return 0;
+}
+
+    bool infixToPostfix() {
+
+    stack<char> s;
+
+    for (int i = 0; i < infix.length(); i++) {
+
+        char c = infix[i];
+
+        if (c == ' ') continue;
+
+        if (isDigit(c)) {
+            string num;
+
+            while (i < infix.length() && (isDigit(infix[i]) || infix[i] == '.')) {
+                num += infix[i];
+                i++;
+            }
+            i--;
+            postfix.push_back(num);
+        }
+
+        else if (isAlpha(c)) {
+            string var;
+
+            while (i < infix.length() && isAlphaNumeric(infix[i])) {
+                var += infix[i];
+                i++;
+            }
+            i--;
+
+            postfix.push_back(var);
+
+            if (!variableExists(var))
+                variables.push_back(var);
+        }
+
+        else if (c == '(' || c == '[' || c == '{') {
+            s.push(c);
+        }
+
+        else if (c == ')' || c == ']' || c == '}') {
+
+            while (!s.empty() && s.top() != '(' && s.top() != '[' && s.top() != '{') {
+                string op(1, s.top());
+                postfix.push_back(op);
+                s.pop();
+            }
+
+            if (!s.empty()) s.pop();
+        }
+
+        else if (isOperator(c)) {
+
+            while (!s.empty() && isOperator(s.top()) &&
+                   precedence(s.top()) >= precedence(c)) {
+
+                string op(1, s.top());
+                postfix.push_back(op);
+                s.pop();
+            }
+
+            s.push(c);
+        }
     }
+
+    while (!s.empty()) {
+        string op(1, s.top());
+        postfix.push_back(op);
+        s.pop();
+    }
+
+    return true;
+}
+   
 };
 
 int main() {
