@@ -84,6 +84,16 @@ public:
 
     if (!infixToPostfix()) return 1;
 
+    inputVariables();
+
+    printPostfix();
+
+    double result;
+
+    if (!evaluate(result)) return 2;
+
+    cout << result << endl;
+
     return 0;
 }
 
@@ -158,6 +168,56 @@ public:
         s.pop();
     }
 
+    return true;
+}
+
+void inputVariables() {
+    for (int i = 0; i < variables.size(); i++) {
+        double val;
+        cin >> val;
+        values[variables[i]] = val;
+    }
+}
+
+void printPostfix() {
+    for (int i = 0; i < postfix.size(); i++) {
+        cout << postfix[i] << " ";
+    }
+    cout << endl;
+}
+
+bool evaluate(double &result) {
+
+    stack<double> s;
+
+    for (int i = 0; i < postfix.size(); i++) {
+
+        string token = postfix[i];
+
+        if (token == "+" || token == "-" || token == "*" || token == "/") {
+
+            double b = s.top(); s.pop();
+            double a = s.top(); s.pop();
+
+            if (token == "+") s.push(a + b);
+            else if (token == "-") s.push(a - b);
+            else if (token == "*") s.push(a * b);
+            else {
+                if (b == 0) return false;
+                s.push(a / b);
+            }
+        }
+
+        else if (isdigit(token[0])) {
+            s.push(stod(token));
+        }
+
+        else {
+            s.push(values[token]);
+        }
+    }
+
+    result = s.top();
     return true;
 }
    
