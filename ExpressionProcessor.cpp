@@ -15,7 +15,7 @@ private:
    vector<string> variables;
    map<string, double> values;
 
-   // Check operator
+   
    bool isOperator(char c) {
 
        return c == '+' ||
@@ -24,7 +24,6 @@ private:
            c == '/';
    }
 
-   // Operator precedence
    int precedence(char c) {
 
        if (c == '+' || c == '-') {
@@ -38,7 +37,7 @@ private:
        return 0;
    }
 
-   // Check alphabet
+   
    bool isAlpha(char c) {
 
        return (c >= 'a' && c <= 'z') ||
@@ -46,19 +45,19 @@ private:
            c == '_';
    }
 
-   // Check digit
+   
    bool isDigit(char c) {
 
        return c >= '0' && c <= '9';
    }
 
-   // Check alphanumeric
+   
    bool isAlphaNumeric(char c) {
 
        return isAlpha(c) || isDigit(c);
    }
 
-   // Variable already exists
+
    bool variableExists(string var) {
 
        for (int i = 0; i < variables.size(); i++) {
@@ -71,7 +70,7 @@ private:
        return false;
    }
 
-   // Matching brackets
+   
    bool matching(char open, char close) {
 
        return (open == '(' && close == ')') ||
@@ -79,7 +78,7 @@ private:
            (open == '{' && close == '}');
    }
 
-   // Validate parentheses
+   
    bool validateParentheses() {
 
        stack<char> s;
@@ -121,7 +120,7 @@ private:
        return true;
    }
 
-   // Convert infix to postfix
+   
    bool infixToPostfix() {
 
        stack<char> s;
@@ -130,12 +129,12 @@ private:
 
            char c = infix[i];
 
-           // Ignore spaces
+    
            if (c == ' ' || c == '\t') {
                continue;
            }
 
-           // Numbers
+
            if (isDigit(c)) {
 
                string num;
@@ -158,7 +157,7 @@ private:
                postfix.push_back(num);
            }
 
-           // Variables
+    
            else if (isAlpha(c)) {
 
                string var;
@@ -179,13 +178,13 @@ private:
                }
            }
 
-           // Opening brackets
+        
            else if (c == '(' || c == '[' || c == '{') {
 
                s.push(c);
            }
 
-           // Closing brackets
+           
            else if (c == ')' || c == ']' || c == '}') {
 
                while (!s.empty() &&
@@ -207,10 +206,10 @@ private:
                s.pop();
            }
 
-           // Operators
+        
            else if (isOperator(c)) {
 
-               // Consecutive operator check
+               
                int j = i - 1;
 
                while (j >= 0 &&
@@ -244,7 +243,7 @@ private:
            }
        }
 
-       // Remaining operators
+       
        while (!s.empty()) {
 
            if (s.top() == '(' ||
@@ -264,7 +263,7 @@ private:
        return true;
    }
 
-   // Get variable values
+   
    void inputVariables() {
 
        for (int i = 0; i < variables.size(); i++) {
@@ -281,7 +280,7 @@ private:
        }
    }
 
-   // Print postfix
+
    void printPostfix() {
 
        for (int i = 0; i < postfix.size(); i++) {
@@ -296,7 +295,7 @@ private:
        cout << endl;
    }
 
-   // Evaluate postfix
+   
    bool evaluate(double& result) {
 
        stack<double> s;
@@ -305,7 +304,7 @@ private:
 
            string token = postfix[i];
 
-           // Operator
+        
            if (token == "+" ||
                token == "-" ||
                token == "*" ||
@@ -351,7 +350,7 @@ private:
                s.push(ans);
            }
 
-           // Number
+        
            else if (isDigit(token[0])) {
 
                try {
@@ -366,7 +365,7 @@ private:
                }
            }
 
-           // Variable
+           
            else {
 
                if (values.find(token) == values.end()) {
@@ -396,30 +395,30 @@ public:
 
        infix = expression;
 
-       // Logical error
+    
        if (!validateParentheses()) {
            return 3;
        }
 
-       // Syntax / conversion
+       
        if (!infixToPostfix()) {
            return 1;
        }
 
-       // Variable input
+    
        inputVariables();
 
-       // Print postfix
+
        printPostfix();
 
-       // Evaluate
+
        double result;
 
        if (!evaluate(result)) {
            return 2;
        }
 
-       // Final answer
+
        cout << result << endl;
 
        return 0;
